@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="002-fill-fake-person" author="jpowelski">
+        <sql>
+            -- dziadek
+            INSERT INTO person (first_name, last_name, age, sex)
+            VALUES ('Hieronim', 'Kowalski', 78, 'MALE');
+            INSERT INTO person (first_name, last_name, age, sex)
+            VALUES ('Krystyna', 'Kowalska', 77, 'FEMALE');
+            -- rodzice
+            INSERT INTO person (first_name, last_name, age, sex)
+            VALUES ('Jan', 'Kowalski', 50, 'MALE');
+            INSERT INTO person (first_name, last_name, age, sex)
+            VALUES ('Ewa', 'Kowalska', 48, 'FEMALE');
+
+            -- dzieci
+            INSERT INTO person (first_name, last_name, age, sex)
+            VALUES ('Sebastian', 'Kowalski', 30, 'MALE');
+            INSERT INTO person (first_name, last_name, age, sex)
+            VALUES ('Marcin', 'Kowalski', 25, 'MALE');
+            INSERT INTO person (first_name, last_name, age, sex)
+            VALUES ('Zosia', 'Kowalska', 17, 'FEMALE');
+        </sql>
+
+    </changeSet>
+
+    <changeSet id="002-fill-fake-person-relations" author="jpowelski">
+        <sql>
+            -- dziadek - tata
+            INSERT INTO person_parent (parent_id, child_id)
+            VALUES (SELECT id from person where first_name='Hieronim' and last_name='Kowalski',
+                       SELECT id from person where first_name='Jan' and last_name='Kowalski');
+
+            -- babcia - tata
+            INSERT INTO person_parent (parent_id, child_id)
+            VALUES (SELECT id from person where first_name='Krystyna' and last_name='Kowalska',
+                       SELECT id from person where first_name='Jan' and last_name='Kowalski');
+
+            -- tata - dzieci
+            INSERT INTO person_parent (parent_id, child_id)
+            VALUES (SELECT id from person where first_name='Jan' and last_name='Kowalski',
+                       SELECT id from person where first_name='Sebastian' and last_name='Kowalski');
+            INSERT INTO person_parent (parent_id, child_id)
+            VALUES (SELECT id from person where first_name='Jan' and last_name='Kowalski',
+                       SELECT id from person where first_name='Marcin' and last_name='Kowalski');
+            INSERT INTO person_parent (parent_id, child_id)
+            VALUES (SELECT id from person where first_name='Jan' and last_name='Kowalski',
+                       SELECT id from person where first_name='Zosia' and last_name='Kowalska');
+
+            -- mama - dzieci
+            INSERT INTO person_parent (parent_id, child_id)
+            VALUES (SELECT id from person where first_name='Ewa' and last_name='Kowalska',
+                       SELECT id from person where first_name='Sebastian' and last_name='Kowalski');
+            INSERT INTO person_parent (parent_id, child_id)
+            VALUES (SELECT id from person where first_name='Ewa' and last_name='Kowalska',
+                       SELECT id from person where first_name='Marcin' and last_name='Kowalski');
+            INSERT INTO person_parent (parent_id, child_id)
+            VALUES (SELECT id from person where first_name='Ewa' and last_name='Kowalska',
+                       SELECT id from person where first_name='Zosia' and last_name='Kowalska');
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

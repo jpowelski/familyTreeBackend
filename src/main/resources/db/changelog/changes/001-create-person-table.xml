@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="001-create-person-table" author="jpowelski">
+        <createTable tableName="person">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="age" type="INT"/>
+            <column name="sex" type="VARCHAR(10)"/>
+        </createTable>
+
+        <createTable tableName="person_parent">
+            <column name="child_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_person_parent_child" references="person(id)"/>
+            </column>
+            <column name="parent_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_person_parent_parent" references="person(id)"/>
+            </column>
+            <column name="remarks" type="VARCHAR(255)"/> </createTable>
+
+        <addPrimaryKey tableName="person_parent" columnNames="child_id, parent_id" constraintName="pk_person_parent"/>
+
+    </changeSet>
+
+</databaseChangeLog>
